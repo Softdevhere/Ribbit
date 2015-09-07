@@ -13,4 +13,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_button">Login</string>
     <string name="sign_up_text">Sign Up</string>
+    <string name="title_activity_signup">Sign Up</string>
+    <string name="emailSignUp">Email</string>
+    <string name="signUp_Button">Sign Up</string>
 </resources>
