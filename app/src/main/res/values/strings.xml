@@ -16,4 +16,8 @@
     <string name="title_activity_signup">Sign Up</string>
     <string name="emailSignUp">Email</string>
     <string name="signUp_Button">Sign Up</string>
+    <string name="wrongCredentialsAlertMessage">Please, make sure you\'ve entered username, password and email</string>
+    <string name="wrongCredentialsAlertTitle">Oooops!</string>
+
+
 </resources>
