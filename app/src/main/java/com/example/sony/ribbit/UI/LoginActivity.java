@@ -1,14 +1,18 @@
 package com.example.sony.ribbit.UI;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sony.ribbit.R;
@@ -32,10 +36,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private String mUserName;
     private String mPassword;
+    private MenuItem mActionBarProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
@@ -50,16 +59,21 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActionBarProgress.setVisible(true);
+
                 mUserName = mUserLogin.getText().toString();
                 mPassword = mPasswordLogin.getText().toString();
                 Credentials credentials = new Credentials(mUserName, mPassword);
 
 
                 if (credentials.checkCredentials()) {
+
                     ParseUser.logInInBackground(mUserName, mPassword, new LogInCallback() {
                         @Override
                         public void done(ParseUser parseUser, ParseException e) {
+                            mActionBarProgress.setVisible(false);
                             if (e == null) {
+
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -108,5 +122,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mActionBarProgress=menu.findItem(R.id.miActionProgress);
+        ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(mActionBarProgress);
+        return super.onPrepareOptionsMenu(menu);
     }
 }

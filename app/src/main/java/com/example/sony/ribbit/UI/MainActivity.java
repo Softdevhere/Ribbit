@@ -49,10 +49,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
 
         if (currentUser==null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            navigate_to_login();
         }else{
             Log.e("Logged in", currentUser.getUsername());
         }
@@ -94,6 +91,13 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         }
     }
 
+    private void navigate_to_login() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,7 +114,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            ParseUser.logOut();
+            navigate_to_login();
+
             return true;
         }
 

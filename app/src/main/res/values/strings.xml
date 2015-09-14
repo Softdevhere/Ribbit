@@ -18,6 +18,7 @@
     <string name="signUp_Button">Sign Up</string>
     <string name="wrongCredentialsAlertMessage">Please, make sure you\'ve entered username, password and email</string>
     <string name="wrongCredentialsAlertTitle">Oooops!</string>
+    <string name="logout_menu_item">Log Out</string>
 
 
 </resources>
