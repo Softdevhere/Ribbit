@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         mActionBarProgress=menu.findItem(R.id.miActionProgress);
-        ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(mActionBarProgress);
+        //ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(mActionBarProgress);
         return super.onPrepareOptionsMenu(menu);
     }
 }
