@@ -114,11 +114,15 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            ParseUser.logOut();
-            navigate_to_login();
+        switch (id) {
+            case (R.id.action_logout):
+                ParseUser.logOut();
+                navigate_to_login();
 
-            return true;
+                return true;
+            case (R.id.action_edit_friends):
+                Intent intent = new Intent(this, EditFriendsActivity.class);
+                startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
