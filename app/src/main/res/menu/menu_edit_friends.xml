@@ -2,9 +2,11 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.sony.ribbit.UI.EditFriendsActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
+    <item android:id="@+id/edit_user_progressbar"
+            android:title="Loading..."
+            android:visible="true"
+            android:orderInCategory="90"
+            app:showAsAction="ifRoom"
+            app:actionLayout="@layout/action_view_progress_bar"/>
 
 </menu>

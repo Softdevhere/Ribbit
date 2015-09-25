@@ -4,14 +4,6 @@
                 android:layout_height="match_parent"
                 tools:context="com.example.sony.ribbit.UI.EditFriendsActivity">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@android:id/list"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        />
 
 
     <TextView
@@ -21,4 +13,12 @@
         android:id="@android:id/empty"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listFragment">
+    </FrameLayout>
+
+
 </RelativeLayout>

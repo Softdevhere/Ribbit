@@ -1,91 +1,72 @@
 package com.example.sony.ribbit.UI;
 
-import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentTransaction;
+import android.app.ListFragment;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import com.example.sony.ribbit.R;
-import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
-import java.util.List;
+public class EditFriendsActivity extends AppCompatActivity implements EditFriendsListFragment.actionBarInterface{
 
-public class EditFriendsActivity extends ListActivity {
 
-    private List<ParseUser> mUsers;
+    private ListFragment mListFragment;
     private MenuItem mActionBarProgress;
+    private Boolean fragmentIsFull;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_edit_friends);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_edit_friends);
+            //supportInvalidateOptionsMenu();
+            fragmentIsFull=false;
 
 
-        try {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+            try {
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setProgressBarIndeterminateVisibility(true);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.orderByAscending(PARSE_CONSTANTS.KEY_USERNAME);
-        query.setLimit(1000);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> list, ParseException e) {
-                setProgressBarIndeterminateVisibility(false);
-                if (e == null) {
-                    Toast toast = Toast.makeText(EditFriendsActivity.this, "Success", Toast.LENGTH_LONG);
-                    toast.show();
-                    mUsers = list;
-                    String[] usernames = new String[mUsers.size()];
-                    int i = 0;
-                    for (ParseUser user : mUsers) {
-                        usernames[i] = user.getUsername();
-                        i++;
-                    }
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditFriendsActivity.this,
-                            android.R.layout.simple_list_item_checked,
-                            usernames);
-                    setListAdapter(adapter);
 
 
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditFriendsActivity.this);
-                    builder.setTitle("Friends list error");
-                    builder.setMessage("An error: " + e.getMessage() + " has occured");
-                    builder.setPositiveButton("Ok", null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            }
-        });
+    }
+
+    private void fillFragment() {
+        if(!fragmentIsFull){
+            mListFragment= new EditFriendsListFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(R.id.listFragment, mListFragment);
+            ft.commit();
+            fragmentIsFull=true;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_edit_friends, menu);
-        return super.onCreateOptionsMenu(menu);
+        Log.i("oncreateoptions", "passed");
+
+
+
+
+        return true;
     }
 
     @Override
@@ -102,4 +83,26 @@ public class EditFriendsActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Log.i("OnPrepare","Stage One");
+
+        // Store instance of the menu item containing progress
+        mActionBarProgress = menu.findItem(R.id.edit_user_progressbar);
+        if(mActionBarProgress==null)Log.i("oncreateoption", "another mistake");
+        // Extract the action-view from the menu item
+        ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(mActionBarProgress);
+        if(mActionBarProgress!=null){
+            fillFragment();
+        }
+
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+    @Override
+    public void progressBar(Boolean toggle) {
+        mActionBarProgress.setVisible(toggle);
+    }
 }
