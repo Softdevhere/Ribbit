@@ -43,12 +43,52 @@
         android:layout_alignParentStart="true"
         android:hint="@string/emailSignUp"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="@string/signupUserFNameLabel"
+        android:ems="10"
+        android:id="@+id/firstNameLabel"
+        android:layout_below="@+id/emailSignupLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/signupUserLNameLabel"
+        android:hint="@string/signupUserLNameLabel"
+        android:layout_below="@+id/firstNameLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/signupUserCityLabel"
+        android:layout_below="@+id/signupUserLNameLabel"
+        android:hint="@string/signupUserCityLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/signupUserWWWLabel"
+        android:hint="@string/signupUserWebLabel"
+        android:layout_below="@+id/signupUserCityLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/signUp_Button"
         android:id="@+id/signUpButton"
-        android:layout_below="@+id/emailSignupLabel"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 </RelativeLayout>

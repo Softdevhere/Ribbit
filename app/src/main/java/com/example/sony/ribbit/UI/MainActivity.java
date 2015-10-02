@@ -2,6 +2,7 @@ package com.example.sony.ribbit.UI;
 
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -142,4 +143,6 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
+
+
 }

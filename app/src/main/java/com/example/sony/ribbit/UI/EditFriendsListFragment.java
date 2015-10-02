@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
@@ -22,7 +23,9 @@ import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -41,11 +44,8 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
     private static final String ARG_PARAM2 = "param2";
     private  List<ParseUser> mUsers;
     private EditFriendsListFragment.actionBarInterface mProgressBar;
-
-
-    private OnFragmentInteractionListener mListener;
-
-
+    private ParseRelation<ParseUser> mUserParseRelation;
+    private ParseUser mCurrentUser;
 
 
     // TODO: Rename and change types and number of parameters
@@ -53,15 +53,12 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         Log.i("OnAttach", "passed");
-
     }
 
 
@@ -71,6 +68,19 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         // Inflate the layout for this fragment
         Log.i("onCreateView", "passed");
 
+
+        return inflater.inflate(R.layout.fragment_edit_friends_list,null);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mProgressBar = (EditFriendsListFragment.actionBarInterface) getActivity();
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -79,25 +89,17 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         query.findInBackground(this);
 
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_edit_friends_list,null);
+
+        mCurrentUser = ParseUser.getCurrentUser();
+
+        mUserParseRelation = mCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
+
     }
-
-
-    //    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+
     }
 
     @Override
@@ -117,6 +119,7 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, usernames);
             setListAdapter(adapter);
+            addFriendCheckmarks();
 
 
         } else {
@@ -134,6 +137,54 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         void progressBar(Boolean toggle);
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Log.i("OnListItemClick Log", "clicked");
+
+        if(getListView().isItemChecked(position)){
+            //add friend
+            mUserParseRelation.add(mUsers.get(position));
+
+        }else{
+            //remove friend
+            mUserParseRelation.remove(mUsers.get(position));
+        }
+
+        mCurrentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    Log.i("PARSE USER SAVING", e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void addFriendCheckmarks(){
+        Log.i("addFriendsCheckMarks","started");
+        mUserParseRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> list, ParseException e) {
+                if(e==null){
+                    //we have the list
+                    for(ParseUser user:list) {
+                        for (int i = 0; i < getListView().getCount(); i++) {
+                            if (mUsers.get(i).getObjectId().equals(user.getObjectId())) {
+                                Log.i("addFriendsCheckMarks", "found a friend:" + user.getUsername());
+                                getListView().setItemChecked(i, true);
+                                break;
+                            }
+                        }
+                    }
+                }else{
+                    Log.i("addFriendsCheckMarks",e.getMessage());
+                }
+            }
+        });
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -148,6 +199,7 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
 
 
 }

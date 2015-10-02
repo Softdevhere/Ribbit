@@ -25,11 +25,19 @@ public class signupActivity extends AppCompatActivity {
     @Bind(R.id.usernameSignUpLabel) EditText mUserSignUp;
     @Bind(R.id.passwordSignupLabel) EditText mPasswordSignUp;
     @Bind(R.id.emailSignupLabel) EditText mEmailSignUp;
+    @Bind(R.id.firstNameLabel) EditText mFirstNameLabel;
+    @Bind(R.id.signupUserLNameLabel) EditText mLastNameLabel;
+    @Bind(R.id.signupUserCityLabel) EditText mCityLabel;
+    @Bind(R.id.signupUserWWWLabel) EditText mWWWLabel;
     @Bind(R.id.signUpButton)     Button mSignUpButton;
 
     private String mUserName;
     private String mPassword;
     private String mEmail;
+    private String mFName;
+    private String mLName;
+    private String mCity;
+    private String mWWW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,11 @@ public class signupActivity extends AppCompatActivity {
                 mUserName = mUserSignUp.getText().toString();
                 mPassword = mPasswordSignUp.getText().toString();
                 mEmail = mEmailSignUp.getText().toString();
+                mFName = mFirstNameLabel.getText().toString();
+                mLName = mLastNameLabel.getText().toString();
+                mCity = mCityLabel.getText().toString();
+                mWWW = mWWWLabel.getText().toString();
+
 
                 Credentials credentials = new Credentials(mUserName, mPassword, mEmail);
                 if(!credentials.checkCredentials()){
@@ -59,6 +72,10 @@ public class signupActivity extends AppCompatActivity {
                     user.setUsername(mUserName);
                     user.setPassword(mPassword);
                     user.setEmail(mEmail);
+                    user.put("FName", mFName);
+                    user.put("LName", mLName);
+                    user.put("City", mCity);
+                    user.put("WWW",mWWW);
                     user.signUpInBackground(new SignUpCallback() {
                         @Override
                         public void done(ParseException e) {

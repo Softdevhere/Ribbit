@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.example.sony.ribbit.R;
@@ -53,6 +54,7 @@ public class EditFriendsActivity extends AppCompatActivity implements EditFriend
             ft.add(R.id.listFragment, mListFragment);
             ft.commit();
             fragmentIsFull=true;
+
         }
     }
 
@@ -94,6 +96,7 @@ public class EditFriendsActivity extends AppCompatActivity implements EditFriend
         ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(mActionBarProgress);
         if(mActionBarProgress!=null){
             fillFragment();
+
         }
 
         // Return to finish

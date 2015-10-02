@@ -24,9 +24,18 @@
     <string name="add_friend_menu_item">Edit friends</string>
     <string name="title_activity_edit_friends">Edit friends</string>
     <string name="edit_friends_empty_label">Try again</string>
+    <string name="signupUserFNameLabel">First name (optional)</string>
+    <string name="signupUserLNameLabel">Last name (optional)</string>
+    <string name="signupUserCityLabel">City (optional)</string>
+    <string name="signupUserWebLabel">Website (optional)</string>
+    <string name="friendFullNameHint">Jek Vosmorkin</string>
+    <string name="friendCityHint">City</string>
+    <string name="friendWWWHint">Web Site</string>
+
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_friend_profile">Friend details</string>
 
 
 </resources>
