@@ -31,11 +31,24 @@
     <string name="friendFullNameHint">Jek Vosmorkin</string>
     <string name="friendCityHint">City</string>
     <string name="friendWWWHint">Web Site</string>
+    <string name="action_camera_label">Camera</string>
+    <string name="external_memory_access_error_message">There was a problem accessing your external memory</string>
+    <string name="taking_photo_error">There was an error with your camera</string>
+    <string name="video_file_restriction_alert">The video file must be less than 10MB</string>
+    <string name="file_not_found_error">There was an error with opening the file</string>
+    <string-array name="camera_choices">
+        <item>Take picture</item>
+        <item>Take video</item>
+        <item>Choose picture</item>
+        <item>Choose video</item>
+    </string-array>
 
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_friend_profile">Friend details</string>
+    <string name="file_too_large">The file is too large</string>
+    <string name="title_activity_receipients">Receipients</string>
 
 
 </resources>
