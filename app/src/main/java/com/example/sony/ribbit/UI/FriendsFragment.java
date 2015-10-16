@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.sony.ribbit.R;
 import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
+import com.example.sony.ribbit.helper.ParseQueries;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -34,6 +35,7 @@ public class FriendsFragment extends ListFragment {
     private String mFriendFullName;
     private String mFriendCity;
     private String mFriendWWW;
+    private ParseQueries mParseQueries;
 
 
 
@@ -50,34 +52,13 @@ public class FriendsFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         mCurrentUser=ParseUser.getCurrentUser();
-        mFriendsRelation=mCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
-        ParseQuery<ParseUser> query= mFriendsRelation.getQuery();
-        query.addAscendingOrder(PARSE_CONSTANTS.KEY_USERNAME);
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> list, ParseException e) {
-                if (e == null) {
-                    mFriends = list;
-                    int i = 0;
-                    mFriendsNames = new String[list.size()];
-                    for (ParseUser user : list) {
-                        mFriendsNames[i] = user.getUsername();
-                        i++;
-                    }
-                    mFriendsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mFriendsNames);
-                    setListAdapter(mFriendsAdapter);
+        mParseQueries = new ParseQueries(getActivity());
+        mFriendsNames=mParseQueries.getFriends(mCurrentUser);
+        if(mFriendsNames!=null) {
+            mFriendsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mFriendsNames);
+            setListAdapter(mFriendsAdapter);
+        }
 
-                } else {
-                    Log.i("Friends.onResume", e.getMessage());
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getListView().getContext());
-                    builder.setTitle("Friends list error");
-                    builder.setMessage("An error: " + e.getMessage() + " has occured");
-                    builder.setPositiveButton("Ok", null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            }
-        });
     }
 
     @Override

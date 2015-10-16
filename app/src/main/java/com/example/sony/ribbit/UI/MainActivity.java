@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
 import com.example.sony.ribbit.UI.LoginActivity;
+import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
@@ -250,8 +251,16 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                 sendBroadcast(mediaScanIntent);
             }
 
-            Intent intent = new Intent(this, ReceipientsActivity.class);
-            startActivity(intent);
+            Intent recipientsIntent = new Intent(this, ReceipientsActivity.class);
+            recipientsIntent.setData(mMediaUri);
+            String fileType;
+            if(requestCode==REQUEST_CODE_TAKE_PHOTO || requestCode==REQUEST_CODE_CHOOSE_PHOTO){
+                fileType=PARSE_CONSTANTS.TYPE_IMAGE;
+            }else {
+                fileType=PARSE_CONSTANTS.TYPE_VIDEO;
+            }
+            recipientsIntent.putExtra(PARSE_CONSTANTS.KEY_FILE_TYPE,fileType);
+            startActivity(recipientsIntent);
 
         }else if(resultCode!=RESULT_CANCELED){
             Toast.makeText(this, R.string.taking_photo_error, Toast.LENGTH_LONG);

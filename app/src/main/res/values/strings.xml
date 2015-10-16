@@ -49,6 +49,9 @@
     <string name="title_activity_friend_profile">Friend details</string>
     <string name="file_too_large">The file is too large</string>
     <string name="title_activity_receipients">Receipients</string>
+    <string name="action_send_label">Send</string>
+    <string name="sending_message_file_error">There was a problem with file you\'ve selected. Please, try another file</string>
+    <string name="error_title">We are sorry!</string>
 
 
 </resources>

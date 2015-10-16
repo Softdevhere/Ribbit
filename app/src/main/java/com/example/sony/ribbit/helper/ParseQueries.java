@@ -10,12 +10,14 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by SONY on 12.10.2015.
  */
 public class ParseQueries {
+    //TODO: configure exceptions if there are no friends for current user
     protected List<ParseUser> mFriends;
     protected String[] mFriendsNames;
     protected ParseRelation<ParseUser> mFriendsRelation;
@@ -27,29 +29,23 @@ public class ParseQueries {
         Log.i("Parse", "Parse started");
     }
 
+
+
     public String[] getFriends(ParseUser current){
             Log.i("Parse", "getFriends started");
-            mParseCurrentUser =current;
-            mFriendsRelation= mParseCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
-            ParseQuery<ParseUser> queryParse= mFriendsRelation.getQuery();
-            queryParse.addAscendingOrder(PARSE_CONSTANTS.KEY_USERNAME);
-            Log.i("Parse", mParseCurrentUser.getUsername());
-        try {
-            mFriends=queryParse.find();
-            Log.i("Parse", "request completed " + mFriends.toString());
-                        int i = 0;
-                        mFriendsNames = new String[mFriends.size()];
-                        for (ParseUser user : mFriends) {
-                            Log.i("Parse",user.getUsername() + " i = " + i);
-                            mFriendsNames[i] = user.getUsername();
-                            i++;
+        getFriendsList(current);
+        //Log.i("Parse", "request completed " + mFriends.toString());
+        int i = 0;
+        if(mFriends.size()>0) {
+            mFriendsNames = new String[mFriends.size()];
+            for (ParseUser user : mFriends) {
+                Log.i("Parse", user.getUsername() + " i = " + i);
+                mFriendsNames[i] = user.getUsername();
+                i++;
 
-                        }
-                        Log.i("Parse", mFriendsNames[0].toString());
+            }
+            //Log.i("Parse", mFriendsNames[0].toString());
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
 //            queryParse.findInBackground(new FindCallback<ParseUser>() {
 //                int started = 1;
@@ -88,7 +84,30 @@ public class ParseQueries {
 //        //mFriendsNames = new String[]{"John", "Bob", "Tesla"};
 ////        int timer =0;
 ////        while(mFriendsNames==null)timer++;
-        Log.i("Parse","Final mFriend " + mFriendsNames[0]);
-        return mFriendsNames;
+            Log.i("Parse", "Final mFriend " + mFriendsNames[0]);
+            return mFriendsNames;
+        }else{
+            return null;
+        }
+    }
+
+    private void getFriendsList(ParseUser current) {
+        mParseCurrentUser =current;
+        mFriendsRelation= mParseCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
+        ParseQuery<ParseUser> queryParse= mFriendsRelation.getQuery();
+        queryParse.addAscendingOrder(PARSE_CONSTANTS.KEY_USERNAME);
+        Log.i("Parse", mParseCurrentUser.getUsername());
+        try {
+            mFriends=queryParse.find();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.i("getFriendList",mFriends.size() + " ");
+    }
+
+    public List<ParseUser> getFriendsObjects(ParseUser current){
+        getFriendsList(current);
+        return mFriends;
     }
 }
