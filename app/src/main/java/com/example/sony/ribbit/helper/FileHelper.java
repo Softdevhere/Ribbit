@@ -30,10 +30,10 @@ public class FileHelper {
         		outStream = new ByteArrayOutputStream();
             
         		byte[] bytesFromFile = new byte[1024*1024]; // buffer size (1 MB)
-        		int bytesRead = inStream.read(bytesFromFile);
+        		int bytesRead = inStream != null ? inStream.read(bytesFromFile) : 0;
         		while (bytesRead != -1) {
         			outStream.write(bytesFromFile, 0, bytesRead);
-        			bytesRead = inStream.read(bytesFromFile);
+        			bytesRead = inStream != null ? inStream.read(bytesFromFile) : 0;
         		}
             
         		fileBytes = outStream.toByteArray();
@@ -43,9 +43,13 @@ public class FileHelper {
 	        }
 	        finally {
 	        	try {
-	        		inStream.close();
-	        		outStream.close();
-	        	}
+					if (inStream != null) {
+						inStream.close();
+					}
+					if (outStream != null) {
+						outStream.close();
+					}
+				}
 	        	catch (IOException e) { /*( Intentionally blank */ }
 	        }
         }
@@ -90,8 +94,8 @@ public class FileHelper {
 			if (uri.getScheme().equals("content")) {
 				// do it using the mime type
 				String mimeType = context.getContentResolver().getType(uri);
-				int slashIndex = mimeType.indexOf("/");
-				String fileExtension = mimeType.substring(slashIndex + 1);
+				int slashIndex = mimeType != null ? mimeType.indexOf("/") : 0;
+				String fileExtension = mimeType != null ? mimeType.substring(slashIndex + 1) : null;
 				fileName += fileExtension;
 			}
 			else {

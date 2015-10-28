@@ -17,9 +17,14 @@ public final class PARSE_CONSTANTS {
     public static final String KEY_FILE_TYPE = "fileType";
     public static final String KEY_FIRST_NAME="FName";
     public static final String KEY_LAST_NAME="LName";
+    public static final String KEY_TEXT_MESSAGE = "TextMessage";
+    public static final String KEY_TIME_SENT = "createdAt";
+
 
     public static final String TYPE_IMAGE = "image";
     public static final String TYPE_VIDEO = "video";
+    public static final int MESSAGE_TYPE_TXT = 1;
+    public static final int MESSAGE_TYPE_MEDIA = 2;
 
 
 

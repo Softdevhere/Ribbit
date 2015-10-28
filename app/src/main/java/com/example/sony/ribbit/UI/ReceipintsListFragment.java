@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
 import com.example.sony.ribbit.helper.FileHelper;
@@ -32,18 +31,20 @@ import java.util.List;
 /**
  * Created by SONY on 12.10.2015.
  */
-public class ReceipintsListFragment extends ListFragment{
-    private  List<ParseUser> mFriends;
+public class ReceipintsListFragment extends ListFragment {
+    private List<ParseUser> mFriends;
     private EditFriendsListFragment.actionBarInterface mProgressBar;
     private ParseRelation<ParseUser> mFriendsRelation;
     private ParseUser mCurrentUser;
-    private String[] mFriendsNames ;
+    private String[] mFriendsNames;
     private ArrayAdapter<String> mFriendsAdapter;
     private ParseQueries mParseQueries;
     private MenuItem mSendItem;
     private Uri mMediaUri;
     private String mFileType;
-
+    private String mMessage;
+    private ParseFile mMessageFile;
+    private int mMessageType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,14 @@ public class ReceipintsListFragment extends ListFragment{
         setHasOptionsMenu(true);
         mMediaUri = getActivity().getIntent().getData();
         mFileType = getActivity().getIntent().getStringExtra(PARSE_CONSTANTS.KEY_FILE_TYPE);
+        mMessage = getActivity().getIntent().getStringExtra("message");
+        if (mMessage != null) {
+            byte[] messageBytes = mMessage.getBytes();
+            mMessageFile = new ParseFile("textMessage.txt", messageBytes);
+            mMessageType = PARSE_CONSTANTS.MESSAGE_TYPE_TXT;
+        } else {
+            mMessageType = PARSE_CONSTANTS.MESSAGE_TYPE_MEDIA;
+        }
     }
 
     @Override
@@ -61,22 +70,22 @@ public class ReceipintsListFragment extends ListFragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.receipints_list_fragment,null);
+        return inflater.inflate(R.layout.receipints_list_fragment, null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        mCurrentUser=ParseUser.getCurrentUser();
+        mCurrentUser = ParseUser.getCurrentUser();
         Log.i("onResume", "current user: " + mCurrentUser.getUsername());
         mParseQueries = new ParseQueries(getActivity());
-        mFriends=mParseQueries.getFriendsObjects(mCurrentUser);
-        mFriendsNames=mParseQueries.getFriends(mCurrentUser);
-        if(mFriends!=null && mFriendsNames != null) {
-            mFriendsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, mFriendsNames);
+        mFriends = mParseQueries.getFriendsObjects(mCurrentUser);
+        mFriendsNames = mParseQueries.getFriends(mCurrentUser);
+        if (mFriends != null && mFriendsNames != null) {
+            mFriendsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, mFriendsNames);
             setListAdapter(mFriendsAdapter);
-        }else {
+        } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Add friends first");
             builder.setPositiveButton("Ok", null);
@@ -88,22 +97,22 @@ public class ReceipintsListFragment extends ListFragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_recipients, menu);
-        mSendItem=menu.findItem(R.id.action_send);
+        mSendItem = menu.findItem(R.id.action_send);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_send:
                 ParseObject message = createMessage();
-                if(message==null){
+                if (message == null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(R.string.sending_message_file_error)
                             .setTitle(R.string.error_title)
-                            .setPositiveButton("Ok",null);
+                            .setPositiveButton("Ok", null);
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                }else{
+                } else {
                     sendMessage(message);
                     getActivity().finish();
                 }
@@ -117,12 +126,12 @@ public class ReceipintsListFragment extends ListFragment{
         message.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null){
+                if (e == null) {
                     Log.i("Message", "Message was sent");
 
-                }else{
+                } else {
 
-                    Log.i("Send Error",e.getMessage());
+                    Log.i("Send Error", e.getMessage());
                 }
 
             }
@@ -132,43 +141,52 @@ public class ReceipintsListFragment extends ListFragment{
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if(l.getCheckedItemCount()>0){
+        if (l.getCheckedItemCount() > 0) {
             mSendItem.setVisible(true);
-        }else {
+        } else {
             mSendItem.setVisible(false);
         }
 
 
     }
 
-    protected ParseObject createMessage(){
+    protected ParseObject createMessage() {
         ParseObject message = new ParseObject(PARSE_CONSTANTS.CLASS_MESSAGES);
-        message.put(PARSE_CONSTANTS.KEY_SENDER_ID,ParseUser.getCurrentUser().getObjectId());
-        message.put(PARSE_CONSTANTS.KEY_SENDER_NAME,ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_FIRST_NAME) + " " +
-                                                    ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_LAST_NAME));
+        message.put(PARSE_CONSTANTS.KEY_SENDER_ID, ParseUser.getCurrentUser().getObjectId());
+        message.put(PARSE_CONSTANTS.KEY_SENDER_NAME, ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_FIRST_NAME) + " " +
+                ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_LAST_NAME));
         message.put(PARSE_CONSTANTS.KEY_RECIPIENT_IDS, getRecipientIds());
-
-        byte[] fileBytes = FileHelper.getByteArrayFromFile(getActivity(), mMediaUri);
-        if(fileBytes==null){
-            return null;
-        }else{
-            if(mFileType.equals(PARSE_CONSTANTS.TYPE_IMAGE)){
-                FileHelper.reduceImageForUpload(fileBytes);
-            }
-            String fileName = FileHelper.getFileName(getActivity(),mMediaUri,mFileType);
-            ParseFile file = new ParseFile(fileName,fileBytes);
-            message.put(PARSE_CONSTANTS.KEY_FILE,file);
-            return message;
+        switch (mMessageType) {
+            case 1:
+                message.put(PARSE_CONSTANTS.KEY_TEXT_MESSAGE, mMessageFile);
+                message.put(PARSE_CONSTANTS.KEY_FILE_TYPE,PARSE_CONSTANTS.KEY_TEXT_MESSAGE);
+                break;
+            case 2:
+                byte[] fileBytes = FileHelper.getByteArrayFromFile(getActivity(), mMediaUri);
+                if (fileBytes == null) {
+                    return null;
+                } else {
+                    if (mFileType.equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
+                        FileHelper.reduceImageForUpload(fileBytes);
+                    }
+                    String fileName = FileHelper.getFileName(getActivity(), mMediaUri, mFileType);
+                    ParseFile file = new ParseFile(fileName, fileBytes);
+                    if(mFileType.equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
+                        message.put(PARSE_CONSTANTS.KEY_FILE_TYPE, PARSE_CONSTANTS.TYPE_IMAGE);
+                    }else {
+                        message.put(PARSE_CONSTANTS.KEY_FILE_TYPE, PARSE_CONSTANTS.TYPE_VIDEO);
+                    }
+                    message.put(PARSE_CONSTANTS.KEY_FILE, file);
+                }
         }
+        return message;
     }
 
     private ArrayList<String> getRecipientIds() {
-        ArrayList<String> recipientIds = new ArrayList<String>();
-        for(int i=0; i<getListView().getCount(); i++){
-            if(getListView().isItemChecked(i)) recipientIds.add(mFriends.get(i).getObjectId());
+        ArrayList<String> recipientIds = new ArrayList<>();
+        for (int i = 0; i < getListView().getCount(); i++) {
+            if (getListView().isItemChecked(i)) recipientIds.add(mFriends.get(i).getObjectId());
         }
         return recipientIds;
     }
-
-
 }

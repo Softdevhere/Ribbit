@@ -1,16 +1,15 @@
 package com.example.sony.ribbit.helper;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,20 +22,20 @@ public class ParseQueries {
     protected ParseRelation<ParseUser> mFriendsRelation;
     protected ParseUser mParseCurrentUser;
     protected Context mContext;
+    protected List<ParseObject> mObjects;
 
-    public ParseQueries(Context context){
-        mContext=context;
+    public ParseQueries(Context context) {
+        mContext = context;
         Log.i("Parse", "Parse started");
     }
 
 
-
-    public String[] getFriends(ParseUser current){
-            Log.i("Parse", "getFriends started");
+    public String[] getFriends(ParseUser current) {
+        Log.i("Parse", "getFriends started");
         getFriendsList(current);
         //Log.i("Parse", "request completed " + mFriends.toString());
         int i = 0;
-        if(mFriends.size()>0) {
+        if (mFriends.size() > 0) {
             mFriendsNames = new String[mFriends.size()];
             for (ParseUser user : mFriends) {
                 Log.i("Parse", user.getUsername() + " i = " + i);
@@ -86,28 +85,46 @@ public class ParseQueries {
 ////        while(mFriendsNames==null)timer++;
             Log.i("Parse", "Final mFriend " + mFriendsNames[0]);
             return mFriendsNames;
-        }else{
+        } else {
             return null;
         }
     }
 
     private void getFriendsList(ParseUser current) {
-        mParseCurrentUser =current;
-        mFriendsRelation= mParseCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
-        ParseQuery<ParseUser> queryParse= mFriendsRelation.getQuery();
+        mParseCurrentUser = current;
+        mFriendsRelation = mParseCurrentUser.getRelation(PARSE_CONSTANTS.Key_FRIENDS_RELATION);
+        ParseQuery<ParseUser> queryParse = mFriendsRelation.getQuery();
         queryParse.addAscendingOrder(PARSE_CONSTANTS.KEY_USERNAME);
         Log.i("Parse", mParseCurrentUser.getUsername());
         try {
-            mFriends=queryParse.find();
+            mFriends = queryParse.find();
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.i("getFriendList",mFriends.size() + " ");
+        Log.i("getFriendList", mFriends.size() + " ");
     }
 
-    public List<ParseUser> getFriendsObjects(ParseUser current){
+    public List<ParseUser> getFriendsObjects(ParseUser current) {
         getFriendsList(current);
         return mFriends;
+    }
+
+    public List<ParseObject> getParseObjects(String className){
+        ParseQuery<ParseObject> messageQuery = new ParseQuery<>(className);
+        messageQuery.whereEqualTo(PARSE_CONSTANTS.KEY_RECIPIENT_IDS,ParseUser.getCurrentUser().getObjectId());
+        messageQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if(e==null){
+                    mObjects=list;
+
+                }else{
+                    Log.i("Objects request", e.getMessage());
+                }
+
+            }
+        });
+        return mObjects;
     }
 }

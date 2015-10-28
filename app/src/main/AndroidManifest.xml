@@ -82,8 +82,15 @@
             android:name=".UI.ReceipientsActivity"
             android:label="@string/title_activity_receipients"
             android:parentActivityName=".UI.MainActivity"
-
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sony.ribbit.UI.MainActivity" />
+        </activity>
+        <activity android:name=".UI.ImageViewActivity"
+                  android:label="@string/image_view_activity"
+                  android:parentActivityName=".UI.MainActivity"
+                  android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sony.ribbit.UI.MainActivity" />

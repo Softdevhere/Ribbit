@@ -52,6 +52,9 @@
     <string name="action_send_label">Send</string>
     <string name="sending_message_file_error">There was a problem with file you\'ve selected. Please, try another file</string>
     <string name="error_title">We are sorry!</string>
+    <string name="send_text_message_label">Send message</string>
+    <string name="text_message_title">Enter your message:</string>
+    <string name="image_view_activity">Ribbit</string>
 
 
 </resources>

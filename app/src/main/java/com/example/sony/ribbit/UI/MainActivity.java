@@ -1,40 +1,44 @@
 package com.example.sony.ribbit.UI;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
+import com.example.sony.ribbit.helper.ParseQueries;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.example.sony.ribbit.R;
-import com.example.sony.ribbit.UI.LoginActivity;
-import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
-import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
 
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     public static final int FILE_SIZE_LIMIT = 1024 * 1024 * 10; //10MB
 
     protected Uri mMediaUri;
+    EditText textMessageView;
+
 
     protected AlertDialog.OnClickListener mCameraOnClickListener = new DialogInterface.OnClickListener() {
         @Override
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                 case 0:
                     Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     mMediaUri = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-                    if (mMediaUri.equals(null)){
+                    if (mMediaUri != null ? mMediaUri.equals(null) : false){
                         Toast.makeText(MainActivity.this, R.string.external_memory_access_error_message, Toast.LENGTH_LONG).show();
                     }else {
                         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
@@ -143,11 +149,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
 
         private boolean isExternalStorageMounted(){
             String state = Environment.getExternalStorageState();
-            if(state.equals(Environment.MEDIA_MOUNTED)){
-                return true;
-            }else {
-                return false;
-            }
+            return state.equals(Environment.MEDIA_MOUNTED);
         }
     };
 
@@ -203,6 +205,8 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         }
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -220,18 +224,16 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                         InputStream inputStream=null;
                         try {
                             inputStream = getContentResolver().openInputStream(mMediaUri);
-                            fileSize = inputStream.available();
-                        }catch (FileNotFoundException fnf){
-                            Toast.makeText(this,R.string.file_not_found_error,Toast.LENGTH_LONG).show();
-                            return;
-
-                        }catch (IOException ioe){
+                            fileSize = inputStream != null ? inputStream.available() : 0;
+                        } catch (IOException ioe){
                             Toast.makeText(this,R.string.file_not_found_error,Toast.LENGTH_LONG).show();
                             return;
                         }
                         finally {
                             try {
-                                inputStream.close();
+                                if (inputStream != null) {
+                                    inputStream.close();
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -263,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             startActivity(recipientsIntent);
 
         }else if(resultCode!=RESULT_CANCELED){
-            Toast.makeText(this, R.string.taking_photo_error, Toast.LENGTH_LONG);
+            Toast.makeText(this, R.string.taking_photo_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -299,11 +301,32 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             case (R.id.action_edit_friends):
                 Intent intent = new Intent(this, EditFriendsActivity.class);
                 startActivity(intent);
+                break;
             case (R.id.action_camera):
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setItems(R.array.camera_choices, mCameraOnClickListener);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                break;
+            case(R.id.action_text_message):
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View messagePrompt = layoutInflater.inflate(R.layout.text_message_dialog,null);
+                AlertDialog.Builder textMessageBuilder = new AlertDialog.Builder(this);
+                textMessageBuilder.setView(messagePrompt);
+                textMessageView = (EditText) messagePrompt.findViewById(R.id.text_message_body);
+                textMessageBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String message;
+                        message = textMessageView.getText().toString();
+                        Intent recipients = new Intent(MainActivity.this, ReceipientsActivity.class);
+                        recipients.putExtra("message", message);
+                        startActivity(recipients);
+                    }
+                });
+                AlertDialog textMessage = textMessageBuilder.create();
+                textMessage.show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
