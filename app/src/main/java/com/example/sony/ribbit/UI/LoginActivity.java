@@ -1,5 +1,6 @@
 package com.example.sony.ribbit.UI;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sony.ribbit.R;
@@ -29,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText mPasswordLogin;
     @Bind(R.id.loginButton)
     Button mLoginButton;
+    @Bind(R.id.loginProgressBar)
+    ProgressBar mProgressBar;
 
     private String mUserName;
     private String mPassword;
@@ -38,10 +42,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-
-
         setContentView(R.layout.activity_login);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
+
         ButterKnife.bind(this);
 
         mSignupTextView.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionBarProgress.setVisible(true);
+                mProgressBar.setVisibility(View.VISIBLE);
 
                 mUserName = mUserLogin.getText().toString();
                 mPassword = mPasswordLogin.getText().toString();
@@ -67,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     ParseUser.logInInBackground(mUserName, mPassword, new LogInCallback() {
                         @Override
                         public void done(ParseUser parseUser, ParseException e) {
-                            mActionBarProgress.setVisible(false);
+                            mProgressBar.setVisibility(View.INVISIBLE);
                             if (e == null) {
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -77,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                builder.setMessage(e.getMessage());
+                                builder.setMessage(R.string.wrong_credentials);
                                 builder.setTitle(R.string.wrongCredentialsAlertTitle);
                                 builder.setPositiveButton(android.R.string.ok, null);
                                 AlertDialog dialog = builder.create();
@@ -87,8 +93,9 @@ public class LoginActivity extends AppCompatActivity {
                     });
 
                 } else {
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.wrongCredentialsAlertMessage + " username: " + credentials.getUserName() + ", password: " + credentials.getPassword());
+                    builder.setMessage(R.string.wrongCredentialsAlertMessage);
                     builder.setTitle(R.string.wrongCredentialsAlertTitle);
                     builder.setPositiveButton(android.R.string.ok, null);
                     AlertDialog dialog = builder.create();

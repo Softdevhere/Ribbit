@@ -11,8 +11,8 @@
     <string name="password_default">Password</string>
     <string name="username_hint">Username</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_button">Login</string>
-    <string name="sign_up_text">Sign Up</string>
+    <string name="login_button">Sign In</string>
+    <string name="sign_up_text">Don\'t have an account? Sign Up!</string>
     <string name="title_activity_signup">Sign Up</string>
     <string name="emailSignUp">Email</string>
     <string name="signUp_Button">Sign Up</string>
@@ -55,6 +55,9 @@
     <string name="send_text_message_label">Send message</string>
     <string name="text_message_title">Enter your message:</string>
     <string name="image_view_activity">Ribbit</string>
+    <string name="backgroundImageDescription">Ribbit Background Image</string>
+    <string name="subtitle">Messanger Project</string>
+    <string name="wrong_credentials">Please, check your login or password</string>
 
 
 </resources>
