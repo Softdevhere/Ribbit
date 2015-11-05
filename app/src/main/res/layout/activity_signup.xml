@@ -1,94 +1,97 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout style="@style/AuthBackground"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context="com.example.sony.ribbit.UI.signupActivity">
 
-    <EditText
+    <include
+        layout="@layout/auth_background_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/usernameSignUpLabel"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/username_hint">
-        <requestFocus/>
-    </EditText>
+        android:layout_height="match_parent"/>
 
-    <EditText
+    <include
+        android:id="@+id/authHeading"
+        layout="@layout/auth_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/passwordSignupLabel"
-        android:layout_below="@+id/usernameSignUpLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/password_default"/>
+        />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/emailSignupLabel"
-        android:layout_below="@+id/passwordSignupLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/emailSignUp"/>
+    <LinearLayout android:id="@+id/signUpCredentialContainer"
+        style="@style/AuthCredentialsContainer">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="@string/signupUserFNameLabel"
-        android:ems="10"
-        android:id="@+id/firstNameLabel"
-        android:layout_below="@+id/emailSignupLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <EditText
+            android:id="@+id/usernameSignUpLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/username_hint"
+            android:inputType="textPersonName">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/signupUserLNameLabel"
-        android:hint="@string/signupUserLNameLabel"
-        android:layout_below="@+id/firstNameLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+            <requestFocus/>
+        </EditText>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signupUserCityLabel"
-        android:layout_below="@+id/signupUserLNameLabel"
-        android:hint="@string/signupUserCityLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <EditText
+            android:id="@+id/passwordSignupLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/password_default"
+            android:inputType="textPassword"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/signupUserWWWLabel"
-        android:hint="@string/signupUserWebLabel"
-        android:layout_below="@+id/signupUserCityLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <EditText
+            android:id="@+id/emailSignupLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/emailSignUp"
+            android:inputType="textEmailAddress"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/signUp_Button"
-        android:id="@+id/signUpButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <EditText
+            android:id="@+id/firstNameLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/signupUserFNameLabel"
+            android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/signupUserLNameLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/signupUserLNameLabel"
+            android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/signupUserCityLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/signupUserCityLabel"/>
+
+        <EditText
+            android:id="@+id/signupUserWWWLabel"
+            style="@style/AuthEditText"
+            android:hint="@string/signupUserWebLabel"/>
+    </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:id="@+id/signUpButtonDivider"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_divider"
+            android:layout_below="@id/signUpCredentialContainer"
+            android:layout_centerHorizontal="true"
+            />
+        <Button
+            android:id="@+id/signUpButton"
+            android:text="@string/signUp_Button"
+            android:layout_below="@id/signUpCredentialContainer"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+
+            android:layout_toLeftOf="@id/signUpButtonDivider"
+            android:layout_toStartOf="@id/signUpButtonDivider"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            style="@style/AuthButton"/>
+        <Button
+            android:id="@+id/signUpCancellButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/cancelButtonLabel"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/signUpButtonDivider"
+            android:layout_below="@id/signUpCredentialContainer"
+            style="@style/AuthButton"/>
+
 </RelativeLayout>

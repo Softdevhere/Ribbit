@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="@style/_AppTheme"/>
     <!-- Base application theme. -->
 
@@ -24,6 +24,57 @@
 
 
 
+    </style>
+
+    <style name="AuthHeading">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AuthBackground">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/background_fill</item>
+    </style>
+
+    <style name="AuthCredentialsContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@id/authHeading</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/login_vertical_margin</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">@dimen/login_vertical_setting</item>
+        <item name="android:paddingLeft">@dimen/login_horizontal_setting</item>
+        <item name="android:paddingRight">@dimen/login_horizontal_setting</item>
+        <item name="android:paddingTop">@dimen/login_vertical_setting</item>
+    </style>
+
+    <style name="AuthButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+
+
+        <item name="android:background">@drawable/custom_button</item>
+        <item name="android:textColor">@color/text_colour_button</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="AuthEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ems">10</item>
+        <item name="android:textColorHint">@color/hint_text_color</item>
+        <item name="android:textSize">17sp</item>
     </style>
     <!--<style name="ButtonAppTheme" parent="android:Widget.Holo.Light.Button">-->
         <!--<item name="android:background">@drawable/apptheme_btn_default_holo_light</item>-->

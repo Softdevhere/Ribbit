@@ -58,6 +58,7 @@
     <string name="backgroundImageDescription">Ribbit Background Image</string>
     <string name="subtitle">Messanger Project</string>
     <string name="wrong_credentials">Please, check your login or password</string>
+    <string name="cancelButtonLabel">Cancel</string>
 
 
 </resources>

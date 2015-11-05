@@ -31,6 +31,7 @@ public class signupActivity extends AppCompatActivity {
     @Bind(R.id.signupUserCityLabel) EditText mCityLabel;
     @Bind(R.id.signupUserWWWLabel) EditText mWWWLabel;
     @Bind(R.id.signUpButton)     Button mSignUpButton;
+    @Bind(R.id.signUpCancellButton) Button mCancelButton;
 
     private String mUserName;
     private String mPassword;
@@ -49,6 +50,12 @@ public class signupActivity extends AppCompatActivity {
         actionBar.hide();
 
         ButterKnife.bind(this);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
