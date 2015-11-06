@@ -9,22 +9,68 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- -->
 
-    <!--
-
-    -->
-
-
-
-    <style name="_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="_AppTheme" parent="Theme.AppCompat.Light">
 
         <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
+        <item name="android:windowActionBar">true</item>
+
+
+        <item name="actionBarStyle">@style/Widget.AppTheme.ActionBar</item>
+        <!--<item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>-->
+        <!--<item name="actionBarPopupTheme">@style/ThemeOverlay.AppTheme.PopupMenu</item>-->
 
         <!--<item name="android:buttonStyle">@style/ButtonAppTheme</item>-->
+        <!--text color-->
+        <item name="android:textColorPrimary">@color/apptheme_color</item>
 
+        <!--tabbar and tabview style definition-->
+        <item name="android:actionBarTabBarStyle">@style/RibbitTabBarStyle</item>
+        <item name="actionBarTabBarStyle">@style/RibbitTabBarStyle</item>
+        <item name="android:actionBarTabStyle">@style/RibbitTabStyle</item>
+        <item name="actionBarTabStyle">@style/RibbitTabStyle</item>
+        <item name="android:actionBarTabTextStyle">@style/RibbitTabTextStyle</item>
+        <item name="actionBarTabTextStyle">@style/RibbitTabTextStyle</item>
+
+    </style>
+
+    <!--actionbar-->
+    <style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <!-- action bar background -->
+        <item name="background">@color/white</item>
+
+
+        <!-- action bar elevation -->
+        <item name="elevation">4dp</item>
+        <!--logo-->
+        <item name="logo">@drawable/ic_launcher</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="displayOptions">useLogo|showHome|showTitle</item>
+    </style>
+    <!--tabs-->
+    <style name="RibbitTabStyle" parent="Widget.AppCompat.Light.ActionBar.TabView">
+        <!--<item name="colorPrimary">#6a4b95</item>-->
+        <!--<item name="colorPrimaryDark">#ba9dda</item>-->
+
+        <!--<item name="colorAccent">#4a2b70</item>-->
+        <item name="android:background">@drawable/tab_indicator_ab_ribbit</item>
 
 
     </style>
+    <!--tab bar-->
+    <style name="RibbitTabBarStyle" parent="Widget.AppCompat.Light.ActionBar.TabBar">
+        <item name="android:background">#6a4b95</item>
+    </style>
+    <!--tab text-->
+    <style name="RibbitTabTextStyle" parent="Widget.AppCompat.Light.ActionBar.TabText">
+        <item name="android:textColor">@color/white</item>
+
+    </style>
+
+
+
+
 
     <style name="AuthHeading">
         <item name="android:layout_width">wrap_content</item>
@@ -64,7 +110,7 @@
 
 
 
-        <item name="android:background">@drawable/custom_button</item>
+        <item name="android:background">@drawable/button_custom</item>
         <item name="android:textColor">@color/text_colour_button</item>
         <item name="android:textSize">13sp</item>
     </style>

@@ -53,6 +53,7 @@ public class FriendsFragment extends ListFragment {
         super.onResume();
         mCurrentUser=ParseUser.getCurrentUser();
         mParseQueries = new ParseQueries(getActivity());
+        mFriends=mParseQueries.getFriendsObjects(mCurrentUser);
         mFriendsNames=mParseQueries.getFriends(mCurrentUser);
         if(mFriendsNames!=null) {
             mFriendsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mFriendsNames);
