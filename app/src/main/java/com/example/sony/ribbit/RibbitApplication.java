@@ -1,4 +1,4 @@
-package com.example.sony.ribbit.helper;
+package com.example.sony.ribbit;
 
 import android.app.Application;
 import android.util.Log;

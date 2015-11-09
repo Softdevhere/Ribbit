@@ -1,4 +1,4 @@
-package com.example.sony.ribbit.helper;
+package com.example.sony.ribbit.adapters;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.google.android.gms.plus.model.moments.Moment;
 import com.parse.ParseObject;
 
@@ -49,9 +50,9 @@ public class MessageAdapter extends ArrayAdapter<ParseObject> {
 
 
         if (message.getString(PARSE_CONSTANTS.KEY_FILE_TYPE).equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
-            viewHolder.iconImageView.setImageResource(R.drawable.ic_action_picture);
+            viewHolder.iconImageView.setImageResource(R.drawable.ic_picture);
         } else if (message.getString(PARSE_CONSTANTS.KEY_FILE_TYPE).equals(PARSE_CONSTANTS.TYPE_VIDEO)) {
-            viewHolder.iconImageView.setImageResource(R.drawable.ic_action_play_over_video);
+            viewHolder.iconImageView.setImageResource(R.drawable.ic_video);
         } else {
             viewHolder.iconImageView.setImageResource(android.R.drawable.ic_menu_agenda);
         }

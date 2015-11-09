@@ -17,13 +17,12 @@
         <item name="android:windowActionBar">true</item>
 
 
-        <item name="actionBarStyle">@style/Widget.AppTheme.ActionBar</item>
-        <!--<item name="actionBarTheme">@style/ThemeOverlay.AppTheme.ActionBar</item>-->
-        <!--<item name="actionBarPopupTheme">@style/ThemeOverlay.AppTheme.PopupMenu</item>-->
 
-        <!--<item name="android:buttonStyle">@style/ButtonAppTheme</item>-->
-        <!--text color-->
-        <item name="android:textColorPrimary">@color/apptheme_color</item>
+        <!--&lt;!&ndash;text color&ndash;&gt;-->
+        <!--<item name="android:textColorPrimary">@color/apptheme_color</item>-->
+
+        <!--actionBar style-->
+        <item name="actionBarStyle">@style/RibbitActionBarStyle</item>
 
         <!--tabbar and tabview style definition-->
         <item name="android:actionBarTabBarStyle">@style/RibbitTabBarStyle</item>
@@ -33,13 +32,26 @@
         <item name="android:actionBarTabTextStyle">@style/RibbitTabTextStyle</item>
         <item name="actionBarTabTextStyle">@style/RibbitTabTextStyle</item>
 
+        <!--actionbar overflow menu style-->
+        <item name="android:actionOverflowButtonStyle">@style/RibbitOverflowButtonStyle</item>
+        <item name="actionOverflowButtonStyle">@style/RibbitOverflowButtonStyle</item>
+
+        <!--listview style-->
+        <item name="android:listViewStyle">@style/listViewStyle</item>
+
+        <!--gridview-->
+        <item name="android:gridViewStyle">@style/gridViewStyle</item>
+
     </style>
 
     <!--actionbar-->
-    <style name="Widget.AppTheme.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+    <style name="RibbitActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
         <!-- action bar background -->
         <item name="background">@color/white</item>
 
+        <!--action bar title text-->
+        <item name="android:titleTextStyle">@style/RibbitTitleTextStyle</item>
+        <item name="titleTextStyle">@style/RibbitTitleTextStyle</item>
 
         <!-- action bar elevation -->
         <item name="elevation">4dp</item>
@@ -48,29 +60,42 @@
         <item name="android:windowNoTitle">false</item>
         <item name="displayOptions">useLogo|showHome|showTitle</item>
     </style>
+
+    <!--actionbar overflow button-->
+    <style name="RibbitOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_menu_overflow</item>
+    </style>
+
+    <!--title text style-->
+    <style name="RibbitTitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text_colour_button</item>
+    </style>
     <!--tabs-->
     <style name="RibbitTabStyle" parent="Widget.AppCompat.Light.ActionBar.TabView">
-        <!--<item name="colorPrimary">#6a4b95</item>-->
-        <!--<item name="colorPrimaryDark">#ba9dda</item>-->
-
-        <!--<item name="colorAccent">#4a2b70</item>-->
         <item name="android:background">@drawable/tab_indicator_ab_ribbit</item>
-
-
     </style>
+
     <!--tab bar-->
     <style name="RibbitTabBarStyle" parent="Widget.AppCompat.Light.ActionBar.TabBar">
         <item name="android:background">#6a4b95</item>
     </style>
+
     <!--tab text-->
     <style name="RibbitTabTextStyle" parent="Widget.AppCompat.Light.ActionBar.TabText">
         <item name="android:textColor">@color/white</item>
 
     </style>
 
+    <!--listView style-->
+    <style name="listViewStyle">
+        <item name="android:background">@color/light_purple_background</item>
+        <item name="android:divider">@null</item>
+    </style>
 
-
-
+    <!--gridView style-->
+    <style name="gridViewStyle">
+        <item name="android:background">@color/light_purple_background</item>
+    </style>
 
     <style name="AuthHeading">
         <item name="android:layout_width">wrap_content</item>

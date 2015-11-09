@@ -9,4 +9,6 @@
     <color name="text_colour_button">#250054</color>
     <color name="light_purple_button">#FFBA9DDA</color>
     <color name="white">#ffffff</color>
+    <color name="light_purple_background">#e9e4ed</color>
+    <color name="swipe_refresh1">#482c6f</color>
 </resources>

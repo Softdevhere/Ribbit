@@ -17,27 +17,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.adapters.SectionsPagerAdapter;
 import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
-import com.example.sony.ribbit.helper.ParseQueries;
-import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ActionBar.TabListener {
@@ -200,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             // this tab is selected.
             actionBar.addTab(
                     actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setIcon(mSectionsPagerAdapter.getIcon(i))
                             .setTabListener(this));
         }
     }

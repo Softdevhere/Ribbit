@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
-import com.example.sony.ribbit.helper.MessageAdapter;
+import com.example.sony.ribbit.adapters.MessageAdapter;
 import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.example.sony.ribbit.helper.ParseQueries;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -34,6 +34,8 @@ import java.util.List;
 public class InboxFragment extends ListFragment {
     List<ParseObject> mMessages;
     ParseQueries mParseQueries;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,14 +46,32 @@ public class InboxFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_inbox, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+        mSwipeRefreshLayout.setColorSchemeColors(R.color.swipe_refresh1);
+        return rootView;
     }
+
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            Toast.makeText(getActivity(),"Refreshing",Toast.LENGTH_LONG).show();
+            retrieveMessages();
+
+        }
+    };
 
     @Override
     public void onResume() {
         super.onResume();
         getActivity().setProgressBarIndeterminateVisibility(true);
+        retrieveMessages();
 
+
+    }
+
+    private void retrieveMessages() {
         //mMessages = mParseQueries.getParseObjects(PARSE_CONSTANTS.CLASS_MESSAGES);
         ParseQuery<ParseObject> messageQuery = new ParseQuery<>(PARSE_CONSTANTS.CLASS_MESSAGES);
         messageQuery.whereEqualTo(PARSE_CONSTANTS.KEY_RECIPIENT_IDS, ParseUser.getCurrentUser().getObjectId());
@@ -60,6 +80,10 @@ public class InboxFragment extends ListFragment {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
                 if (e == null) {
+
+                    if(mSwipeRefreshLayout.isRefreshing()){
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                     mMessages = list;
                     getActivity().setProgressBarIndeterminateVisibility(false);
                     int i = 0;
@@ -89,7 +113,6 @@ public class InboxFragment extends ListFragment {
                 }
             }
         });
-
     }
 
     @Override

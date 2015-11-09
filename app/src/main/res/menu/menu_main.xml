@@ -11,11 +11,11 @@
 
     <item android:id="@+id/action_camera"
         android:title="@string/action_camera_label"
-        android:icon="@drawable/ic_action_camera"
+        android:icon="@drawable/ic_menu_camera"
         app:showAsAction="always"/>
     <item android:title="@string/send_text_message_label"
           android:id="@+id/action_text_message"
-          android:icon="@drawable/ic_chat_bubble_white_24dp"
+          android:icon="@drawable/ic_menu_text_message"
           app:showAsAction = "always"
         />
 

@@ -1,4 +1,4 @@
-package com.example.sony.ribbit.UI;
+package com.example.sony.ribbit.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.UI.FriendsFragment;
+import com.example.sony.ribbit.UI.InboxFragment;
 
 import java.util.Locale;
 
@@ -56,5 +58,16 @@ import java.util.Locale;
                     return mContext.getString(R.string.title_section2).toUpperCase(l);
              }
             return null;
+        }
+
+        public int getIcon(int position){
+            Locale l = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return R.drawable.ic_tab_inbox;
+                case 1:
+                    return R.drawable.ic_tab_friends;
+            }
+            return R.drawable.ic_tab_inbox;
         }
     }
