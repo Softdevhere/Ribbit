@@ -1,6 +1,7 @@
 package com.example.sony.ribbit.UI;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,10 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.adapters.UserAdapter;
 import com.example.sony.ribbit.helper.FileHelper;
 import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.example.sony.ribbit.helper.ParseQueries;
@@ -31,13 +36,12 @@ import java.util.List;
 /**
  * Created by SONY on 12.10.2015.
  */
-public class ReceipintsListFragment extends ListFragment {
+public class ReceipintsListFragment extends Fragment {
     private List<ParseUser> mFriends;
     private EditFriendsListFragment.actionBarInterface mProgressBar;
     private ParseRelation<ParseUser> mFriendsRelation;
     private ParseUser mCurrentUser;
     private String[] mFriendsNames;
-    private ArrayAdapter<String> mFriendsAdapter;
     private ParseQueries mParseQueries;
     private MenuItem mSendItem;
     private Uri mMediaUri;
@@ -45,6 +49,8 @@ public class ReceipintsListFragment extends ListFragment {
     private String mMessage;
     private ParseFile mMessageFile;
     private int mMessageType;
+    private GridView mFriendGrid;
+    private UserAdapter mFriendsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,13 +71,16 @@ public class ReceipintsListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mFriendGrid.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.receipints_list_fragment, null);
-    }
+        View layoutView = inflater.inflate(R.layout.user_grid,null);
+        mFriendGrid =(GridView)layoutView.findViewById(R.id.friendGrid);
+        mFriendGrid.setEmptyView(layoutView.findViewById(android.R.id.empty));
+        return layoutView;
+        }
 
     @Override
     public void onResume() {
@@ -82,9 +91,32 @@ public class ReceipintsListFragment extends ListFragment {
         mParseQueries = new ParseQueries(getActivity());
         mFriends = mParseQueries.getFriendsObjects(mCurrentUser);
         mFriendsNames = mParseQueries.getFriends(mCurrentUser);
+
         if (mFriends != null && mFriendsNames != null) {
-            mFriendsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_checked, mFriendsNames);
-            setListAdapter(mFriendsAdapter);
+            if (mFriendsAdapter==null) {
+                mFriendsAdapter = new UserAdapter(getActivity(), mFriends);
+                mFriendGrid.setAdapter(mFriendsAdapter);
+            }else
+            {
+                ((UserAdapter)mFriendGrid.getAdapter()).refill(mFriends);
+            }
+            mFriendGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ImageView imageView = (ImageView) view.findViewById(R.id.checkMarkImageView);
+                    if(mFriendGrid.isItemChecked(position)){
+                        imageView.setVisibility(View.VISIBLE);
+                    }else {
+                        imageView.setVisibility(View.INVISIBLE);
+                    }
+                    if (mFriendGrid.getCheckedItemCount() > 0) {
+                        mSendItem.setVisible(true);
+
+                    } else {
+                        mSendItem.setVisible(false);
+                    }
+                }
+            });
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Add friends first");
@@ -138,17 +170,7 @@ public class ReceipintsListFragment extends ListFragment {
         });
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        if (l.getCheckedItemCount() > 0) {
-            mSendItem.setVisible(true);
-        } else {
-            mSendItem.setVisible(false);
-        }
 
-
-    }
 
     protected ParseObject createMessage() {
         ParseObject message = new ParseObject(PARSE_CONSTANTS.CLASS_MESSAGES);
@@ -184,8 +206,8 @@ public class ReceipintsListFragment extends ListFragment {
 
     private ArrayList<String> getRecipientIds() {
         ArrayList<String> recipientIds = new ArrayList<>();
-        for (int i = 0; i < getListView().getCount(); i++) {
-            if (getListView().isItemChecked(i)) recipientIds.add(mFriends.get(i).getObjectId());
+        for (int i = 0; i < mFriendGrid.getCount(); i++) {
+            if (mFriendGrid.isItemChecked(i)) recipientIds.add(mFriends.get(i).getObjectId());
         }
         return recipientIds;
     }

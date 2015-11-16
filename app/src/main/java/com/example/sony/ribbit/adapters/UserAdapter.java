@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,10 +37,12 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
+        GridView gridView = (GridView)parent;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.user_item, null);
             viewHolder = new ViewHolder();
             viewHolder.userImageView = (ImageView) convertView.findViewById(R.id.friendImageView);
+            viewHolder.checkImageView = (ImageView) convertView.findViewById(R.id.checkMarkImageView);
             viewHolder.nameLabel = (TextView) convertView.findViewById(R.id.nameLabel);
             convertView.setTag(viewHolder);
         } else {
@@ -61,21 +64,19 @@ public class UserAdapter extends ArrayAdapter<ParseUser> {
                     .placeholder(R.drawable.avatar_empty)
                     .into(viewHolder.userImageView);
         }
-//        if (message.getString(PARSE_CONSTANTS.KEY_FILE_TYPE).equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
-//            viewHolder.userImageView.setImageResource(R.drawable.ic_picture);
-//        } else if (message.getString(PARSE_CONSTANTS.KEY_FILE_TYPE).equals(PARSE_CONSTANTS.TYPE_VIDEO)) {
-//            viewHolder.userImageView.setImageResource(R.drawable.ic_video);
-//        } else {
-//            viewHolder.userImageView.setImageResource(android.R.drawable.ic_menu_agenda);
-//        }
+
         viewHolder.nameLabel.setText(user.getString("FName") + " " + user.getString("LName"));
 
-
-
+        if(gridView.isItemChecked(position)){
+            viewHolder.checkImageView.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.checkImageView.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
 
     private static class ViewHolder {
+        ImageView checkImageView;
         ImageView userImageView;
         //TextView messageItemTextView;
         TextView nameLabel;

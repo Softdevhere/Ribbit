@@ -1,5 +1,6 @@
 package com.example.sony.ribbit.UI;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import com.example.sony.ribbit.R;
 public class EditFriendsActivity extends AppCompatActivity implements EditFriendsListFragment.actionBarInterface{
 
 
-    private ListFragment mListFragment;
+    private Fragment mListFragment;
     private MenuItem mActionBarProgress;
     private Boolean fragmentIsFull;
 

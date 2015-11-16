@@ -148,6 +148,15 @@
         <item name="android:textColorHint">@color/hint_text_color</item>
         <item name="android:textSize">17sp</item>
     </style>
+
+    <style name="grid_image_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
     <!--<style name="ButtonAppTheme" parent="android:Widget.Holo.Light.Button">-->
         <!--<item name="android:background">@drawable/apptheme_btn_default_holo_light</item>-->
     <!--</style>-->

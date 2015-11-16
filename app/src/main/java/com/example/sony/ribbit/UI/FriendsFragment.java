@@ -1,30 +1,21 @@
 package com.example.sony.ribbit.UI;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import com.example.sony.ribbit.R;
 import com.example.sony.ribbit.adapters.UserAdapter;
-import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.example.sony.ribbit.helper.ParseQueries;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,7 +38,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
+        View rootView = inflater.inflate(R.layout.user_grid, container, false);
         mFriendGrid = (GridView) rootView.findViewById(R.id.friendGrid);
         mFriendGrid.setEmptyView(rootView.findViewById(android.R.id.empty));
 

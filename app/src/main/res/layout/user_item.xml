@@ -6,14 +6,17 @@
     >
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/friendImageView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/avatar_empty"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"/>
+        android:contentDescription="@string/no_avatar_image_label"
+        style="@style/grid_image_style"/>
+
+    <ImageView
+        android:id="@+id/checkMarkImageView"
+        android:src="@drawable/avatar_selected"
+        android:contentDescription="@string/user_grid_checkmark_label"
+        style="@style/grid_image_style"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"

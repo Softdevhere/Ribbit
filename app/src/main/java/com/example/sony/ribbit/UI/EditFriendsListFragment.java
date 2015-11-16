@@ -2,23 +2,22 @@ package com.example.sony.ribbit.UI;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.adapters.UserAdapter;
 import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -37,7 +36,7 @@ import java.util.List;
  * Use the {@link EditFriendsListFragment} factory method to
  * create an instance of this fragment.
  */
-public class EditFriendsListFragment extends ListFragment implements FindCallback<ParseUser> {
+public class EditFriendsListFragment extends Fragment implements FindCallback<ParseUser> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,6 +45,9 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
     private EditFriendsListFragment.actionBarInterface mProgressBar;
     private ParseRelation<ParseUser> mUserParseRelation;
     private ParseUser mCurrentUser;
+    private GridView mFriendGrid;
+    private UserAdapter mFriendsAdapter;
+
 
 
     // TODO: Rename and change types and number of parameters
@@ -53,6 +55,7 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -67,15 +70,41 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.i("onCreateView", "passed");
-
-
-        return inflater.inflate(R.layout.fragment_edit_friends_list,null);
+        View layoutView = inflater.inflate(R.layout.user_grid,null);
+        mFriendGrid =(GridView)layoutView.findViewById(R.id.friendGrid);
+        mFriendGrid.setEmptyView(layoutView.findViewById(android.R.id.empty));
+        mFriendGrid.setOnItemClickListener(mOnItem);
+        return layoutView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mFriendGrid.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//        mFriendGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.i("OnListItemClick Log", "clicked");
+//
+//                if(mFriendGrid.isItemChecked(position)){
+//                    //add friend
+//                    mUserParseRelation.add(mUsers.get(position));
+//
+//                }else{
+//                    //remove friend
+//                    mUserParseRelation.remove(mUsers.get(position));
+//                }
+//
+//                mCurrentUser.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        if(e!=null){
+//                            Log.i("PARSE USER SAVING", e.getMessage());
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override
@@ -118,12 +147,24 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_checked, usernames);
-            setListAdapter(adapter);
+            if (mFriendsAdapter==null) {
+                mFriendsAdapter = new UserAdapter(getActivity(), mUsers);
+                mFriendGrid.setAdapter(mFriendsAdapter);
+            }else
+            {
+                ((UserAdapter)mFriendGrid.getAdapter()).refill(mUsers);
+            }
+
             addFriendCheckmarks();
 
 
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(super.getContext());
+            AlertDialog.Builder builder = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                builder = new AlertDialog.Builder(super.getContext());
+            }else{
+                builder = new AlertDialog.Builder(super.getActivity());
+            }
             builder.setTitle("Friends list error");
             builder.setMessage("An error: " + e.getMessage() + " has occured");
             builder.setPositiveButton("Ok", null);
@@ -137,29 +178,6 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         void progressBar(Boolean toggle);
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Log.i("OnListItemClick Log", "clicked");
-
-        if(getListView().isItemChecked(position)){
-            //add friend
-            mUserParseRelation.add(mUsers.get(position));
-
-        }else{
-            //remove friend
-            mUserParseRelation.remove(mUsers.get(position));
-        }
-
-        mCurrentUser.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e!=null){
-                    Log.i("PARSE USER SAVING", e.getMessage());
-                }
-            }
-        });
-    }
 
     private void addFriendCheckmarks(){
         Log.i("addFriendsCheckMarks","started");
@@ -169,10 +187,10 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
                 if(e==null){
                     //we have the list
                     for(ParseUser user:list) {
-                        for (int i = 0; i < getListView().getCount(); i++) {
+                        for (int i = 0; i < mFriendGrid.getCount(); i++) {
                             if (mUsers.get(i).getObjectId().equals(user.getObjectId())) {
                                 Log.i("addFriendsCheckMarks", "found a friend:" + user.getUsername());
-                                getListView().setItemChecked(i, true);
+                                mFriendGrid.setItemChecked(i, true);
                                 break;
                             }
                         }
@@ -199,6 +217,34 @@ public class EditFriendsListFragment extends ListFragment implements FindCallbac
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+    private AdapterView.OnItemClickListener mOnItem = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            ImageView imageView = (ImageView)view.findViewById(R.id.checkMarkImageView);
+
+            Log.i("OnListItemClick Log", "clicked");
+
+            if(mFriendGrid.isItemChecked(position)){
+                //add friend
+                mUserParseRelation.add(mUsers.get(position));
+                imageView.setVisibility(View.VISIBLE);
+            }else{
+                //remove friend
+                mUserParseRelation.remove(mUsers.get(position));
+                imageView.setVisibility(View.INVISIBLE);
+            }
+
+            mCurrentUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e!=null){
+                        Log.i("PARSE USER SAVING", e.getMessage());
+                    }
+                }
+            });
+        }
+    };
 
 
 

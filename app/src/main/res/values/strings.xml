@@ -59,6 +59,8 @@
     <string name="subtitle">Messanger Project</string>
     <string name="wrong_credentials">Please, check your login or password</string>
     <string name="cancelButtonLabel">Cancel</string>
+    <string name="no_avatar_image_label">No avatar image</string>
+    <string name="user_grid_checkmark_label">Friend grid checkmark</string>
 
 
 </resources>
