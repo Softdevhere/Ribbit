@@ -3,6 +3,7 @@ package com.example.sony.ribbit.UI;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ListFragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +26,10 @@ import com.example.sony.ribbit.helper.PARSE_CONSTANTS;
 import com.example.sony.ribbit.helper.ParseQueries;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -51,11 +55,13 @@ public class ReceipintsListFragment extends Fragment {
     private int mMessageType;
     private GridView mFriendGrid;
     private UserAdapter mFriendsAdapter;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mContext=getActivity();
         mMediaUri = getActivity().getIntent().getData();
         mFileType = getActivity().getIntent().getStringExtra(PARSE_CONSTANTS.KEY_FILE_TYPE);
         mMessage = getActivity().getIntent().getStringExtra("message");
@@ -76,11 +82,11 @@ public class ReceipintsListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layoutView = inflater.inflate(R.layout.user_grid,null);
-        mFriendGrid =(GridView)layoutView.findViewById(R.id.friendGrid);
+        View layoutView = inflater.inflate(R.layout.user_grid, null);
+        mFriendGrid = (GridView) layoutView.findViewById(R.id.friendGrid);
         mFriendGrid.setEmptyView(layoutView.findViewById(android.R.id.empty));
         return layoutView;
-        }
+    }
 
     @Override
     public void onResume() {
@@ -93,20 +99,19 @@ public class ReceipintsListFragment extends Fragment {
         mFriendsNames = mParseQueries.getFriends(mCurrentUser);
 
         if (mFriends != null && mFriendsNames != null) {
-            if (mFriendsAdapter==null) {
+            if (mFriendsAdapter == null) {
                 mFriendsAdapter = new UserAdapter(getActivity(), mFriends);
                 mFriendGrid.setAdapter(mFriendsAdapter);
-            }else
-            {
-                ((UserAdapter)mFriendGrid.getAdapter()).refill(mFriends);
+            } else {
+                ((UserAdapter) mFriendGrid.getAdapter()).refill(mFriends);
             }
             mFriendGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     ImageView imageView = (ImageView) view.findViewById(R.id.checkMarkImageView);
-                    if(mFriendGrid.isItemChecked(position)){
+                    if (mFriendGrid.isItemChecked(position)) {
                         imageView.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         imageView.setVisibility(View.INVISIBLE);
                     }
                     if (mFriendGrid.getCheckedItemCount() > 0) {
@@ -160,7 +165,7 @@ public class ReceipintsListFragment extends Fragment {
             public void done(ParseException e) {
                 if (e == null) {
                     Log.i("Message", "Message was sent");
-
+                    sendPushNotification();
                 } else {
 
                     Log.i("Send Error", e.getMessage());
@@ -170,6 +175,19 @@ public class ReceipintsListFragment extends Fragment {
         });
     }
 
+    private void sendPushNotification() {
+        ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+        query.whereContainedIn(PARSE_CONSTANTS.KEY_USER_ID, getRecipientIds());
+
+        //send push
+        ParsePush push = new ParsePush();
+        push.setQuery(query);
+        push.setMessage(mContext.getString(R.string.push_new_message_recipients,
+                ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_FIRST_NAME) +
+                        ParseUser.getCurrentUser().getString(PARSE_CONSTANTS.KEY_LAST_NAME)));
+
+        push.sendInBackground();
+    }
 
 
     protected ParseObject createMessage() {
@@ -181,7 +199,7 @@ public class ReceipintsListFragment extends Fragment {
         switch (mMessageType) {
             case 1:
                 message.put(PARSE_CONSTANTS.KEY_TEXT_MESSAGE, mMessageFile);
-                message.put(PARSE_CONSTANTS.KEY_FILE_TYPE,PARSE_CONSTANTS.KEY_TEXT_MESSAGE);
+                message.put(PARSE_CONSTANTS.KEY_FILE_TYPE, PARSE_CONSTANTS.KEY_TEXT_MESSAGE);
                 break;
             case 2:
                 byte[] fileBytes = FileHelper.getByteArrayFromFile(getActivity(), mMediaUri);
@@ -193,9 +211,9 @@ public class ReceipintsListFragment extends Fragment {
                     }
                     String fileName = FileHelper.getFileName(getActivity(), mMediaUri, mFileType);
                     ParseFile file = new ParseFile(fileName, fileBytes);
-                    if(mFileType.equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
+                    if (mFileType.equals(PARSE_CONSTANTS.TYPE_IMAGE)) {
                         message.put(PARSE_CONSTANTS.KEY_FILE_TYPE, PARSE_CONSTANTS.TYPE_IMAGE);
-                    }else {
+                    } else {
                         message.put(PARSE_CONSTANTS.KEY_FILE_TYPE, PARSE_CONSTANTS.TYPE_VIDEO);
                     }
                     message.put(PARSE_CONSTANTS.KEY_FILE, file);

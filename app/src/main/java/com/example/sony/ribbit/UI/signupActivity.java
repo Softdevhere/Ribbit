@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.RibbitApplication;
 import com.example.sony.ribbit.helper.Credentials;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -92,6 +93,8 @@ public class signupActivity extends AppCompatActivity {
                         public void done(ParseException e) {
                             if(e==null){
                                 Log.i("New User", "New user created");
+                                RibbitApplication.updateParseInstallation(ParseUser.getCurrentUser());
+
                                 Intent intent = new Intent(signupActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

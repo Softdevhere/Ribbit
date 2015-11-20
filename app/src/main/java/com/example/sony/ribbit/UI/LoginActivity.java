@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sony.ribbit.R;
+import com.example.sony.ribbit.RibbitApplication;
 import com.example.sony.ribbit.helper.Credentials;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -75,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void done(ParseUser parseUser, ParseException e) {
                             mProgressBar.setVisibility(View.INVISIBLE);
                             if (e == null) {
-
+                                RibbitApplication.updateParseInstallation(parseUser);
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

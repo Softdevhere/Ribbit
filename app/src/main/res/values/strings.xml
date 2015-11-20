@@ -61,6 +61,7 @@
     <string name="cancelButtonLabel">Cancel</string>
     <string name="no_avatar_image_label">No avatar image</string>
     <string name="user_grid_checkmark_label">Friend grid checkmark</string>
+    <string name="push_new_message_recipients">You have new message %s!</string>
 
 
 </resources>
